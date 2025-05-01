@@ -3,9 +3,11 @@ import type { ForwardRefExoticComponent, RefAttributes, SVGProps } from 'react';
 import help from '@/assets/svg/help.svg';
 import home from '@/assets/svg/home.svg';
 import toggleSideBar from '@/assets/svg/toggle-sidebar.svg';
+import { Loader2 } from 'lucide-react';
 import alignJustify from './svg/align-justify.svg';
 import arrowRight from './svg/arrowRight.svg';
 import calendar from './svg/calendar.svg';
+import cart from './svg/cart.svg';
 import chevronDown from './svg/chevron-down.svg';
 import closeEye from './svg/close-eye.svg';
 import close from './svg/close.svg';
@@ -41,6 +43,7 @@ import X from './svg/x.svg';
 import xlsx from './svg/xlsx.svg';
 
 const IconList = {
+  cart,
   home,
   help,
   toggleSideBar,
@@ -80,6 +83,7 @@ const IconList = {
   calendar,
   xCircle,
   wallet,
+  spinner: Loader2,
 };
 
 type SVGAttributes = Partial<SVGProps<SVGSVGElement>>;

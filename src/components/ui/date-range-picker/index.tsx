@@ -1,8 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable default-case */
+'use client';
 
 import { parse } from 'date-fns';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';

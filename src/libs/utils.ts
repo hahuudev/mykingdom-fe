@@ -1,5 +1,3 @@
-import type { IDocument } from '@/api/battle-dashboard/types';
-
 export const formatNumber = (number?: number, fractionDigits?: number): string => {
   if (number === 0 || number === null) return '0';
   if (typeof number !== 'number' || !number) return 'N/A';
@@ -40,37 +38,4 @@ export function shortenAddress(str?: string, length = 4) {
   if (!str) return '';
   if (str?.length < length) return str;
   return `${str.substring(0, 6)}...${str.substring(str.length - 4)}`;
-}
-
-type DocumentCounts = {
-  csv: number;
-  docs: number;
-  pdf: number;
-  xlsx: number;
-};
-
-export function countDocumentsByType(documents: IDocument[]): DocumentCounts {
-  const counts: DocumentCounts = {
-    csv: 0,
-    docs: 0,
-    pdf: 0,
-    xlsx: 0,
-  };
-
-  const typeMapping: Record<string, string> = {
-    'text/csv': 'csv',
-    'application/pdf': 'pdf',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
-    'application/msword': 'docs',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docs',
-  };
-
-  documents.forEach((doc) => {
-    const key = typeMapping[doc.document_type];
-    if (key) {
-      (counts as any)[key]++;
-    }
-  });
-
-  return counts;
 }

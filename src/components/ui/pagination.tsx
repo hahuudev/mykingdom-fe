@@ -64,8 +64,8 @@ const Pagination = (props: Props) => {
           <Button
             size={'sm'}
             key={pageNumber}
-            variant={`${pageNumber === currentPage ? 'damask' : 'outline'}`}
-            className={cn('w-9 rounded-none font-semibold text-xs', pageNumber === currentPage ? 'text-white' : 'text-gray-800')}
+            variant={`${pageNumber === currentPage ? 'default' : 'outline'}`}
+            className={cn('w-9 rounded-sm font-semibold text-xs', pageNumber === currentPage ? 'text-white' : 'text-gray-800')}
             onClick={() => {
               onPageChange(pageNumber as number);
             }}

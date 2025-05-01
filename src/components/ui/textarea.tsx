@@ -13,8 +13,7 @@ export const textAreaVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'border shadow-[0px_1px_2px_0px_#1018280D] bg-[#FAFAFA26] border-[#FFFFFF26] text-primary-700 placeholder:text-[#8A513659] shadow-[0px_1px_2px_0px_#1018280D]',
+        default: 'shadow-[0px_1px_2px_0px_#1018280D] bg-[#FAFAFA26] placeholder:text-[#8A513659]',
         filled: 'bg-background',
         floating: '',
       },

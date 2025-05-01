@@ -38,7 +38,7 @@ const TextField = <T extends FieldValues>({
           <FormControl>
             <div className="space-y-1">
               <Show when={!!label}>
-                <FormLabel className={cn('text-base', labelClassName)}>
+                <FormLabel className={cn('', labelClassName)}>
                   {label} {required && <span className="text-amaranth-600">*</span>}
                 </FormLabel>
               </Show>

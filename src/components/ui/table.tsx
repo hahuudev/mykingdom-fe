@@ -1,9 +1,10 @@
 import * as React from 'react';
 
+import { Icons } from '@/assets/icons';
 import { cn } from '@/libs/common';
-import type { IPagination } from '@/types';
+import type { IMetaResponse } from '@/types';
 import { ChevronDown } from 'lucide-react';
-import { HStack, Show } from '../utilities';
+import { HStack, Show, VStack } from '../utilities';
 import Pagination from './pagination';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 import { SkeletonWrapper } from './skeleton-wrapper';
@@ -86,16 +87,17 @@ export const TableSkeleton = ({ loading = false, row = 5, col = 4 }: TableSkelet
 
 export type TablePaginationProps = {
   onPageChange: (page: number) => void;
-  pagination: Partial<IPagination>;
-  onPageSizeChange?: (pageSize: string) => void;
+  pagination: Partial<IMetaResponse>;
+  onPageSizeChange?: (pageSize: number) => void;
+  loading?: boolean;
 };
 export const TablePagination = ({ onPageSizeChange, onPageChange, pagination }: TablePaginationProps) => {
   return (
     <HStack pos="apart" className="text-white">
       <HStack className="hidden lg:flex">
-        <Select value={String(pagination?.limit)} onValueChange={onPageSizeChange}>
+        <Select value={String(pagination?.limit)} onValueChange={(value) => onPageSizeChange?.(Number(value))}>
           <SelectTrigger
-            className="h-9 w-fit gap-1 rounded border border-[#5832201A] bg-secondary-500 px-3 py-2 font-semibold text-xs"
+            className="h-9 w-fit gap-1 rounded border border-[#5832201A] bg-primary-500 px-3 py-2 font-semibold text-xs"
             icon={<ChevronDown size={16} />}
           >
             Show <SelectValue />
@@ -113,14 +115,14 @@ export const TablePagination = ({ onPageSizeChange, onPageChange, pagination }: 
       <HStack className="gap-10">
         <div className="ml-2 hidden font-semibold text-gray-800 text-sm lg:flex">
           Page&nbsp;
-          {Number(pagination?.current_page) || 0}&nbsp;of&nbsp;
-          <SkeletonWrapper>{pagination?.total_page || 0}</SkeletonWrapper>
+          {Number(pagination?.page) || 0}&nbsp;of&nbsp;
+          <SkeletonWrapper>{pagination?.totalPages || 0}</SkeletonWrapper>
         </div>
 
         <Pagination
           onPageChange={onPageChange}
-          totalCount={pagination?.total_item || 0}
-          currentPage={pagination?.current_page || 0}
+          totalCount={pagination?.total || 0}
+          currentPage={pagination?.page || 0}
           pageSize={pagination?.limit || 10}
         />
       </HStack>
@@ -129,3 +131,111 @@ export const TablePagination = ({ onPageSizeChange, onPageChange, pagination }: 
 };
 
 export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow };
+
+type NodataTableProps = {
+  col: number;
+};
+
+const NodataTable = ({ col }: NodataTableProps) => {
+  return (
+    <tr>
+      <td colSpan={col + 1}>
+        <HStack pos="center" className="px-4 pt-18 pb-24 lg:pt-24 lg:pb-32">
+          <VStack>
+            <Icons.noDataTable />
+
+            <div className="mt-3 text-center font-medium text-grey-300 text-sm lg:text-base">No data available in table !</div>
+          </VStack>
+        </HStack>
+      </td>
+    </tr>
+  );
+};
+
+export interface ITableColumn {
+  title: string;
+  key: string;
+  getCell?: ({ value, row }: { value: any; row: any }) => React.ReactNode;
+  align?: 'center' | 'left' | 'right';
+  color?: string;
+  className?: string;
+}
+
+type TableBaseProps = {
+  columns: ITableColumn[];
+  dataSource: any;
+  loading?: boolean;
+};
+
+const TableBase = ({ columns, dataSource, loading }: TableBaseProps) => {
+  return (
+    <Table className="rounded border">
+      <TableHeader>
+        <TableRow className="bg-table-header-bg">
+          {columns?.map((column, index) => (
+            <TableHead
+              key={column.key}
+              className={cn(
+                'relative pl-4 font-semibold text-grey-600',
+                {
+                  'text-left': !column.align || column.align === 'left',
+                  'text-center': column.align === 'center',
+                  'text-right': column.align === 'right',
+                },
+                column.className
+              )}
+            >
+              <div className={''}>{column.title}</div>
+              {index > 0 && <div className="absolute top-2 bottom-2 left-0 border"></div>}
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        <Show when={!loading && dataSource && dataSource?.length > 0}>
+          {dataSource?.map((row: any, index: number) => (
+            <TableRow key={index}>
+              {columns.map((column) => (
+                <TableCell key={column.key}>
+                  {column.getCell ? (
+                    column.getCell({ value: row[column.key], row })
+                  ) : (
+                    <div
+                      className={cn('line-clamp-3 min-h-4 w-full px-2 py-1 font-medium text-[13px] text-grey-600', {
+                        'justify-start': !column.align || column.align === 'left',
+                        'justify-center': column.align === 'center',
+                        'justify-end': column.align === 'right',
+                      })}
+                      style={column.color ? { color: column.color } : undefined}
+                    >
+                      {row[column.key]}
+                    </div>
+                  )}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </Show>
+
+        {/* Loading */}
+        <Show when={loading}>
+          {[1, 2, 3].map((item) => (
+            <TableRow key={item}>
+              {columns?.map((column) => (
+                <TableCell key={column.key} className="py-1.5">
+                  <SkeletonWrapper loading className="h-5 w-full" />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </Show>
+        <Show when={!loading && (!dataSource || dataSource?.length === 0)}>
+          <NodataTable col={columns?.length} />
+        </Show>
+      </TableBody>
+    </Table>
+  );
+};
+
+export default TableBase;

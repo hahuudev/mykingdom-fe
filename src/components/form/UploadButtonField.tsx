@@ -1,21 +1,18 @@
 'use client';
 
-import { onMutateError } from '@/libs/common';
-import React, { useEffect, useRef, useState } from 'react';
-import { type Control, type FieldPath, type FieldPathValue, type FieldValues, useFormContext } from 'react-hook-form';
-
-import { uploadMultiFile } from '@/api/battle-dashboard/requests';
-import type { IUploadFileResponse } from '@/api/battle-dashboard/types';
 import { Icons } from '@/assets/icons';
-import { MAPPING_FILE_ICONS } from '@/libs/mapping-files';
+import { cn, onMutateError } from '@/libs/common';
 import { useMutation } from '@tanstack/react-query';
+import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
+import { type Control, type FieldPath, type FieldPathValue, type FieldValues, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import H4 from '../text/H4';
-import type { ButtonProps } from '../ui/button';
-import { FormControl, FormField, FormItem, FormMessage } from '../ui/form';
-import { Progress } from '../ui/progress';
-import { HStack, Show, VStack } from '../utilities';
+import { Button, type ButtonProps } from '../ui/button';
+import { FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Show, VStack } from '../utilities';
+import { uploadSingleFile } from '@/api/upload/requests';
+
 interface Props<T extends FieldValues = FieldValues> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'accept' | 'onChange'> {
   control: Control<T>;
   name: FieldPath<T>;
@@ -26,8 +23,14 @@ interface Props<T extends FieldValues = FieldValues> extends Omit<React.InputHTM
   loading?: boolean;
   btnProps?: ButtonProps;
   maxSize?: number;
-  maxFiles?: number;
-  onChange?: (files: IUploadFileResponse[]) => void;
+  onChange?: (file: any) => void;
+  label?: string;
+  labelClassName?: string;
+  required?: boolean;
+  previewClassNames?: {
+    image?: string;
+    wrapper?: string;
+  };
 }
 
 const UploadButtonField = <T extends FieldValues>({
@@ -39,91 +42,49 @@ const UploadButtonField = <T extends FieldValues>({
   loading,
   className,
   readonly,
-  maxFiles,
-  onChange,
+  label,
+  labelClassName,
+  required,
+  previewClassNames,
   ...props
 }: Props<T>) => {
-  const ref = useRef<React.ElementRef<'input'>>(null);
   const [progress, setProgress] = useState<number>(0);
-  const [files, setFiles] = useState<File[]>([]);
-  const [uploadedFiles, setUploadedFiles] = useState<IUploadFileResponse[]>([]);
+  const [url, setUrl] = useState<string | undefined>(undefined);
+  const ref = useRef<React.ElementRef<'input'>>(null);
 
-  const form = useFormContext();
   const { mutate, isLoading } = useMutation(({ formData, onProgress }: { formData: FormData; onProgress: (progress: number) => void }) =>
-    uploadMultiFile(formData, onProgress)
+    uploadSingleFile(formData, onProgress)
   );
 
-  const handleChangeFile = (e: File[], onFieldChange: any) => {
-    if (
-      maxFiles &&
-      (files?.length > maxFiles || e.length > maxFiles || files.length + e.length > maxFiles || uploadedFiles.length + e.length > maxFiles)
-    ) {
-      toast.error(`You can only upload a maximum of ${maxFiles} files.`);
-      return;
-    }
+  const handleChangeFile = (file: File, onFieldChange: any) => {
+    if (!file) return;
     const formData = new FormData();
-    if (e && e.length > 0) {
-      const seen = new Set();
-      const filesArray = Array.from(e);
-      const filteredE = filesArray.filter((file) => {
-        const key = `${file.name}-${file.size}`;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
+    formData.append('file', file);
 
-      const uniqueFiles = filteredE.filter(
-        (newFile) => !uploadedFiles.some((file) => file.file_name === newFile.name && file.size === newFile.size)
-      );
-
-      if (e.length > uniqueFiles.length) {
-        toast.error(`Duplicate name. Please check again!`);
-        return;
-      }
-
-      if (uniqueFiles.length === 0) return;
-
-      setFiles(uniqueFiles);
-
-      uniqueFiles.forEach((file) => {
-        formData.append('files', file);
-      });
-      formData.append('folder_name', 'documents');
-
-      mutate(
-        {
-          formData,
-          onProgress: (progress) => {
-            setProgress(progress);
-          },
+    mutate(
+      {
+        formData,
+        onProgress: (progress) => {
+          setProgress(progress);
         },
-        {
-          onSuccess: (result) => {
-            const combinedFiles = [...result, ...uploadedFiles];
-            setUploadedFiles(combinedFiles);
-            onChange?.(combinedFiles);
-            setFiles([]);
-            onFieldChange(combinedFiles);
-          },
-          onError: onMutateError,
-        }
-      );
-    }
+      },
+      {
+        onSuccess: (result) => {
+          onFieldChange(result.url);
+          setUrl(result.url);
+        },
+        onError: onMutateError,
+      }
+    );
   };
 
-  const handleDeleteFile = (file: IUploadFileResponse, onChange: any) => {
-    const newUploadedFiles = uploadedFiles.filter((x) => x.file_name !== file.file_name);
-
-    setUploadedFiles(newUploadedFiles);
-    onChange(newUploadedFiles);
-  };
-
-  const values = form.watch(name);
+  const form = useFormContext();
+  const value = form.watch(name);
   useEffect(() => {
-    if (values && values?.length > 0) {
-      setUploadedFiles(values);
+    if (value) {
+      setUrl(value);
     }
-  }, [values]);
+  }, [value]);
 
   return (
     <FormField
@@ -132,106 +93,81 @@ const UploadButtonField = <T extends FieldValues>({
       name={name}
       render={({ field: { onChange, value } }) => {
         return (
-          <div className="">
-            <FormItem>
-              <FileUploader
-                maxSize={25}
-                minSize={1 / 1024}
-                {...props}
-                ref={ref}
-                multiple
-                hoverTitle="d"
-                name="file"
-                types={accept.length === 0 ? undefined : accept}
-                handleChange={(files: File[]) => {
-                  handleChangeFile(files, onChange);
-                }}
-                onSizeError={(type: string) => {
-                  if (type === 'File size is too small') {
-                    toast.error('Cannot upload files smaller than 1KB !');
-                  } else {
-                    toast.error('Learning data size must be less than ' + (props.maxSize ?? 25) + 'MB !');
-                  }
-                }}
-                onTypeError={(error: string) => {
-                  toast.error(error);
-                }}
-              >
-                <VStack align="center" className="rounded-md bg-[#FAFAFA26] py-4" spacing={4}>
-                  <div className="flex h-10 w-10 rounded-lg border border-[#8A51361A] bg-[#8A51360D] shadow-[0px_1px_2px_0px_#1018280D]">
-                    <Icons.upload className="m-auto" />
-                  </div>
-
-                  <div className="mt-2 text-gray-800 text-sm">
-                    <span className="mr-1 font-semibold text-tertiary-900">Click to upload</span>
-                    or drag and drop
-                  </div>
-
-                  <div className="text-gray-800 text-sm">DOCX, PDF, CSV or XLSX (max. 25 MB)</div>
-                </VStack>
-              </FileUploader>
-              <FormControl></FormControl>
-
-              <FormMessage className="mt-1 text-xs" />
-            </FormItem>
-            <Show when={files.length > 0 || uploadedFiles.length > 0}>
-              <div className="mt-4 grid grid-cols-2 gap-10 rounded-md bg-[#FAFAFA26] p-4">
-                <Show when={files.length > 0}>
-                  {files.map((file, index) => (
-                    <HStack noWrap spacing={24} key={index}>
-                      <div className="min-w-[20px]">{(MAPPING_FILE_ICONS as any)?.[file.type]}</div>
-
-                      <VStack className="flex-1" spacing={0}>
-                        <HStack spacing={16} noWrap className="">
-                          <H4 className="line-clamp-1 flex-1 text-wrap break-all font-semibold text-tertiary-900 lg:text-sm">
-                            {file.name}
-                          </H4>
-                          <span className="mr-6 font-normal text-primary-700 text-sm">
-                            {file.size < 1024 * 1024 ? `${Math.ceil(file.size / 1024)} KB` : `${(file.size / (1024 * 1024)).toFixed(2)} MB`}
-                          </span>
-                        </HStack>
-                        <HStack noWrap spacing={16}>
-                          <Progress value={(file as any)?.is_uploaded ? 100 : progress} className="" />
-                          <span className="text-tertiary-900">{(file as any)?.is_uploaded ? 100 : progress}%</span>
-                        </HStack>
-                      </VStack>
-                      <button type="button">
-                        <Icons.trash />
-                      </button>
-                    </HStack>
-                  ))}
-                </Show>
-
-                <Show when={uploadedFiles.length > 0}>
-                  {uploadedFiles.map((file, index) => (
-                    <HStack noWrap spacing={24} key={index}>
-                      <div>{(MAPPING_FILE_ICONS as any)?.[file.content_type]}</div>
-                      <VStack className="flex-1" spacing={0}>
-                        <HStack spacing={16} noWrap className="">
-                          <H4 className="line-clamp-1 flex-1 text-wrap break-all font-semibold text-tertiary-900 lg:text-sm">
-                            {file.file_name}
-                          </H4>
-                          <span className="mr-6 font-normal text-primary-700 text-sm">
-                            {file.size < 1024 * 1024 ? `${Math.ceil(file.size / 1024)} KB` : `${(file.size / (1024 * 1024)).toFixed(2)} MB`}
-                          </span>
-                        </HStack>
-                        <HStack noWrap spacing={16}>
-                          <Progress value={100} className="" />
-                          {/* <Progress value={(file as any)?.is_uploaded ? 100 : progress} className="" /> */}
-                          {/* <span className="text-tertiary-900">{(file as any)?.is_uploaded ? 100 : progress}%</span> */}
-                          <span className="text-tertiary-900">{100}%</span>
-                        </HStack>
-                      </VStack>
-
-                      <button onClick={() => handleDeleteFile(file, onChange)} type="button">
-                        <Icons.trash />
-                      </button>
-                    </HStack>
-                  ))}
-                </Show>
-              </div>
+          <FormItem>
+            <Show when={!!label}>
+              <FormLabel className={cn('font-medium text-[#717171] text-xs uppercase leading-[150%]', labelClassName)}>
+                {label} {required && <span className="text-red-500">*</span>}
+              </FormLabel>
             </Show>
-          </div>
+
+            <FileUploader
+              maxSize={props?.maxSize ?? 25}
+              minSize={0.5 / 1024}
+              {...props}
+              ref={ref}
+              hoverTitle="d"
+              name="file"
+              types={accept.length === 0 ? undefined : accept}
+              handleChange={(file: File) => {
+                handleChangeFile(file, onChange);
+              }}
+              onSizeError={(type: string) => {
+                if (type === 'File size is too small') {
+                  toast.error('Cannot upload files smaller than 1KB !');
+                } else {
+                  toast.error('The data size must be less than ' + (props?.maxSize ?? 25) + 'MB !');
+                }
+              }}
+              onTypeError={(error: string) => {
+                toast.error(error);
+              }}
+            >
+              <VStack align="center" className="!bg-[#F3F3F3] rounded-md border-dotted py-4" spacing={4}>
+                {/* <div className="flex h-10 w-10 rounded-lg border border-[#8A51361A] bg-[#8A51360D] shadow-[0px_1px_2px_0px_#1018280D]">
+                  <Icons.upload className="m-auto" />
+                </div> */}
+
+                <div className="mt-2 text-center text-[#898989] text-sm">
+                  <span className="mr-1 font-semibold text-[#131313]">Click to upload</span>
+                  or drag and drop <br />
+                  PNG or JPEG (max. {props?.maxSize ?? 25} MB)
+                </div>
+
+                <Button variant={'outline'} className="mt-3">
+                  Select Files
+                </Button>
+
+                {/* <div className="text-gray-800 text-sm">DOCX, PDF, CSV or XLSX (max. 25 MB)</div> */}
+              </VStack>
+            </FileUploader>
+
+            <FormMessage className="mt-1 text-xs" />
+
+            {url && (
+              <div
+                className={cn('relative mt-2 h-[400px] overflow-hidden rounded md:aspect-[144/40] md:h-auto', previewClassNames?.wrapper)}
+              >
+                <Image
+                  className={cn('object-cover md:aspect-[144/40]', previewClassNames?.image)}
+                  alt=""
+                  src={url ?? ''}
+                  fill
+                  sizes="100vh"
+                />
+                <Button
+                  variant={'outline'}
+                  className="absolute right-2 bottom-2 bg-white"
+                  onClick={() => {
+                    form.setValue('banner_url', '', { shouldDirty: true });
+                    setUrl('');
+                  }}
+                >
+                  <Icons.trash className="mr-2 text-red-600" />
+                  Delete
+                </Button>
+              </div>
+            )}
+          </FormItem>
         );
       }}
     />

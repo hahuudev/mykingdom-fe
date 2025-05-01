@@ -1,11 +1,12 @@
-import H1 from '@/components/text/H1';
+'use client';
 import Container from '@/components/wrapper/Container';
 import React from 'react';
+import Banner from './components/Banner';
 
 const HomePage = () => {
   return (
     <Container>
-      <H1 className="text-tertiary-900">Home page</H1>
+      <Banner />
     </Container>
   );
 };

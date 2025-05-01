@@ -9,15 +9,14 @@ import { Show } from '../utilities';
 export const inputVariants = cva(
   cn(
     'border-input border placeholder:font-normal bg-transparent ring-offset-background peer',
-    'focus-visible:ring-transparent focus-visible:shadow-[0px_0px_0px_4px_#38E09640] focus-visible:border-[#00A061] focus-visible:border flex w-full file:border-0 file:bg-transparent',
+    'focus-visible:ring-transparent focus-visible:shadow-[0px_0px_0px_4px_#ff9ead40] focus-visible:border-[#ff667d] focus-visible:border flex w-full file:border-0 file:bg-transparent',
     'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-primary-500'
     // 'read-only:bg-readonly read-only:border-readonly-border read-only:cursor-default'
   ),
   {
     variants: {
       variant: {
-        default:
-          'border shadow-[0px_1px_2px_0px_#1018280D] bg-[#FAFAFA26] border-[#FFFFFF26] text-primary-700 placeholder:text-[#8A513659]',
+        default: 'shadow-[0px_1px_2px_0px_#1018280D] bg-[#FAFAFA26] placeholder:text-[#8A513659]',
       },
       inputSize: {
         sm: 'h-11 px-3 py-2 text-sm rounded-sm file:text-sm file:font-medium ',
@@ -38,10 +37,11 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>,
   fullWidth?: boolean;
   label?: React.ReactNode;
   leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ leftIcon, className, variant = 'default', label, children, fullWidth, inputSize, type, suffix, id, ...props }, ref) => {
+  ({ leftIcon, className, variant = 'default', label, children, fullWidth, inputSize, type, suffix, id, rightIcon, ...props }, ref) => {
     const [show, setShow] = React.useState(false);
     return (
       <div className={cn('relative', fullWidth && 'w-full')}>
@@ -67,6 +67,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {show ? <Icons.openEye /> : <Icons.eyeOff />}
           </div>
         </Show>
+        {rightIcon || <></>}
       </div>
     );
   }

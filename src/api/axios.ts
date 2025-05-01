@@ -19,8 +19,8 @@ const onRefreshToken = async (refreshToken: string) => {
   const store = useUserStore.getState();
 
   try {
-    const { access_token } = await refreshTokenRequest(refreshToken);
-    return access_token;
+    const { accessToken } = await refreshTokenRequest(refreshToken);
+    return accessToken;
   } catch (e) {
     isRefreshPending = false;
     refreshTokenPromise = null;

@@ -1,11 +1,9 @@
 export interface ILoginResponse {
-  access_token: string;
-  access_token_ttl: number;
-  refresh_token: string;
-  refresh_token_ttl: number;
+  accessToken: string;
+  accessTokenTtl: number;
+  refreshToken: string;
+  refreshTokenTtl: number;
   user: IUser;
-  is_verified_user: boolean;
-  verify_token: string;
 }
 
 export interface IRefreshTokenResponse extends ILoginResponse {}

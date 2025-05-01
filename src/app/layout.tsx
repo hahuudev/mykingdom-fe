@@ -1,9 +1,13 @@
-import { fontMetropolis, fontMono, fontOrbitron, fontSans, openSans } from '@/config/fonts';
+import { fontOrbitron, fontPoppins, fontSans, openSans } from '@/config/fonts';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/libs/common';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Providers from './providers';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.appUrl),
@@ -59,12 +63,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         cz-shortcut-listen="true"
         className={cn(
-          'min-h-screen bg-background font-metropolis antialiased',
+          'min-h-screen bg-background font-poppins antialiased',
           openSans.variable,
           fontSans.variable,
-          fontMono.variable,
-          fontOrbitron.variable,
-          fontMetropolis.variable
+          fontPoppins.variable,
+          fontOrbitron.variable
         )}
       >
         <Providers>

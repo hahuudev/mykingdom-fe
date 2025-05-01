@@ -1,7 +1,7 @@
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
 
-import { Open_Sans, Orbitron } from 'next/font/google';
+import { Open_Sans, Orbitron, Poppins } from 'next/font/google';
 
 export const openSans = Open_Sans({
   subsets: ['latin'],
@@ -47,5 +47,11 @@ export const fontMetropolis = localFont({
 export const fontOrbitron = Orbitron({
   subsets: ['latin'],
   variable: '--font-orbitron',
+  weight: ['900', '400', '500', '600', '700', '800'],
+});
+
+export const fontPoppins = Poppins({
+  subsets: ['latin'],
+  variable: '--font-poppins',
   weight: ['900', '400', '500', '600', '700', '800'],
 });

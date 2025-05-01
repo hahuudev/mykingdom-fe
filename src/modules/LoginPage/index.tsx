@@ -20,12 +20,12 @@ import { type AuthSchema, authSchema } from './libs/validators';
 
 const LoginPage = () => {
   const router = useRouter();
-  const { setUser, setIsWalletConnected } = useUserStore();
+  const { setUser } = useUserStore();
 
   const form = useForm<AuthSchema>({
     resolver: zodResolver(authSchema),
     defaultValues: {
-      user_info: '',
+      email: '',
       password: '',
     },
   });
@@ -34,10 +34,10 @@ const LoginPage = () => {
 
   const handleSubmit: SubmitHandler<AuthSchema> = async (formData) => {
     loginCredential(formData, {
-      onSuccess: ({ access_token, refresh_token, access_token_ttl, refresh_token_ttl, user }) => {
-        setCookie('access_token', access_token, { maxAge: access_token_ttl * 60 });
-        setCookie('refresh_token', refresh_token, {
-          maxAge: refresh_token_ttl * 60,
+      onSuccess: ({ user, accessToken, refreshToken, accessTokenTtl, refreshTokenTtl }) => {
+        setCookie('access_token', accessToken, { maxAge: accessTokenTtl * 60 });
+        setCookie('refresh_token', refreshToken, {
+          maxAge: refreshTokenTtl * 60,
         });
         setUser(user);
         router.replace(ROUTER.HOME);
@@ -53,24 +53,15 @@ const LoginPage = () => {
         <div className="h-full w-full" style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}></div>
       </div>
 
-      <VStack className="w-full max-w-[450px] rounded-lg border bg-[#FFFFFF26] px-6 py-6 shadow-card-2 md:px-8" spacing={16}>
-        <HStack className="mb-3" pos="center">
-          <Image width={400} height={232} src="/images/logo.png" alt="battle logo" className="h-auto w-[11rem]" />
-        </HStack>
-
-        <h1 className="mb-5 text-center font-semibold text-2xl md:text-3xl">Admin Login</h1>
+      <HStack className="mb-3" pos="center">
+        <Image width={600} height={348} src="/images/logo.png" alt="battle logo" className="h-auto w-[14rem]" />
+      </HStack>
+      <VStack className="w-full max-w-[450px] rounded-lg border border-grey-100 px-6 py-6 shadow-card-2 md:px-8" spacing={16}>
+        <h1 className="mb-5 text-center font-semibold text-2xl md:text-3xl">User Login</h1>
 
         <FormWrapper form={form} onSubmit={handleSubmit}>
           <VStack spacing={32}>
-            <TextField
-              inputSize="md"
-              required
-              fullWidth
-              control={form.control}
-              name="user_info"
-              label="Username"
-              placeholder="Enter your username"
-            />
+            <TextField inputSize="md" required fullWidth control={form.control} name="email" label="Email" placeholder="Enter your email" />
             <TextField
               required
               fullWidth

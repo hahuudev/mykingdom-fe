@@ -5,7 +5,7 @@ import type { TextProps } from '@/types';
 
 const H2 = forwardRef<any, TextProps>(({ className, children, ...props }, ref) => {
   return (
-    <h2 {...props} ref={ref} className={cn('font-semibold text-xl lg:text-2xl', className)}>
+    <h2 {...props} ref={ref} className={cn('font-orbitron font-semibold text-xl lg:text-2xl', className)}>
       {children}
     </h2>
   );

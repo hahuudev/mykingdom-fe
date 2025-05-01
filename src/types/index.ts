@@ -17,8 +17,9 @@ export interface TextProps extends React.HTMLAttributes<HTMLHeadingElement> {}
 export interface ITableQuery {
   page: number;
   limit: number;
-  sort_key: string;
-  sort_type: string;
+  sortKey: string;
+  sortValue: string;
+  search: string;
 }
 
 export interface IPagination {
@@ -27,4 +28,10 @@ export interface IPagination {
   total_page: number;
   total_item: number;
   current_page: number;
+}
+export interface IMetaResponse {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }

@@ -3,21 +3,11 @@ import { env } from '@/libs/const';
 import type { AuthSchema } from '@/modules/LoginPage/libs/validators';
 import axios from 'axios';
 import client from '../axios';
-import type { ILoginResponse, IUploadAvatarResponse, IUser, IWalletConnect } from './types';
+import type { ILoginResponse, IUploadAvatarResponse, IUser } from './types';
 
 export const loginRequest = async (formData: AuthSchema): Promise<ILoginResponse> => {
   const { data } = await client({
-    url: '/api/admin/sign-in',
-    method: 'POST',
-    data: formData,
-  });
-
-  return data?.data;
-};
-
-export const connectWallet = async (formData: IWalletConnect): Promise<ILoginResponse> => {
-  const { data } = await client({
-    url: '/api/admin/auth/connect-wallet',
+    url: '/api/auth/sign-in',
     method: 'POST',
     data: formData,
   });
@@ -46,7 +36,7 @@ export const editAccount = async (formData: Omit<EditAccountSchema, 'wallet_addr
 
 export const getUserLogin = async (): Promise<IUser> => {
   const { data } = await client({
-    url: '/api/admin/info',
+    url: '/api/auth/me',
     method: 'GET',
   });
 

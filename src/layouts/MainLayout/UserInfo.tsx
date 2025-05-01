@@ -5,9 +5,7 @@ import { Icons } from '@/assets/icons';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { HStack, VStack } from '@/components/utilities';
-import { useCopy } from '@/hooks/useCopy';
 import { useUserLogin } from '@/hooks/useUserLogin';
-import { onMutateError } from '@/libs/common';
 import { ROUTER } from '@/libs/router';
 import { useUserStore } from '@/stores/UserStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -17,29 +15,24 @@ import Image from 'next/image';
 import React from 'react';
 
 const UserInfo = () => {
-  const { isFetching, user } = useUserLogin();
-  const { logout, isWalletConnected, setIsWalletConnected } = useUserStore();
+  const { user } = useUserLogin();
+  const { logout } = useUserStore();
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [copied, copy] = useCopy();
 
   const { mutate } = useMutation(userLogout);
 
-  const handleDisconnect = () => {
-    setIsWalletConnected(false);
-  };
-
   const handleLogout = async () => {
-    mutate(undefined, {
-      onSuccess: () => {
-        router.replace(ROUTER.SIGN_IN);
-        queryClient.clear();
-        logout();
-        deleteCookie('access_token');
-        deleteCookie('refresh_token');
-      },
-      onError: onMutateError,
-    });
+    // mutate(undefined, {
+    //   onSuccess: () => {
+    router.replace(ROUTER.SIGN_IN);
+    queryClient.clear();
+    logout();
+    deleteCookie('access_token');
+    deleteCookie('refresh_token');
+    //   },
+    //   onError: onMutateError,
+    // });
   };
 
   return (
@@ -61,22 +54,13 @@ const UserInfo = () => {
             <HStack spacing={20}>
               <Image src={user?.avatar || '/images/no-image.svg'} alt="Avatar" width={40} height={40} className="h-10 w-10 rounded-full" />
 
-              <VStack className="text-primary-700 text-sm">
+              <VStack className=" text-base">
                 <span className="">{user?.username || '--'}</span>
               </VStack>
             </HStack>
           </VStack>
 
-          <Button
-            className="flex items-center justify-start gap-2 bg-transparent text-base text-primary-700 hover:text-white"
-            variant={'white'}
-            onClick={handleDisconnect}
-          >
-            <Icons.wallet className="" />
-            Disconnect
-          </Button>
-
-          <Button className="flex w-full items-center gap-2 bg-amaranth-600" onClick={handleLogout}>
+          <Button className="flex w-full items-center gap-2" onClick={handleLogout}>
             <Icons.logout />
             Log Out
           </Button>

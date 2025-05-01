@@ -2,7 +2,7 @@ import { validationMessages } from '@/libs/validation.utility';
 import { z } from 'zod';
 
 export const authSchema = z.object({
-  user_info: z.string({ required_error: 'Username is required' }).nonempty(validationMessages.required('Username')),
+  email: z.string({ required_error: 'Username is required' }).email().nonempty(validationMessages.required('Username')),
   password: z
     .string({ required_error: 'Password is required' })
     .nonempty(validationMessages.required('Password'))
