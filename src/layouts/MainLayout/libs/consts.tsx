@@ -1,10 +1,5 @@
 import { ROUTER } from '@/libs/router';
 
-export const MENU_NAVS = [
-  { title: 'Agents Dashboard', link: ROUTER.AGENTS_DASHBOARD },
-  { title: 'Battles Management', link: ROUTER.BATTLES_MANAGEMENT },
-];
-
 import { Icons } from '@/assets/icons';
 
 export const sidebars = [

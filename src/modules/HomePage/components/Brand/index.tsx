@@ -1,23 +1,23 @@
 'use client';
-import { useCategoriesQuery } from '@/api/category/queries';
+import { useBrands } from '@/api/brand/queries';
 import H2 from '@/components/text/H2';
 import { Show } from '@/components/utilities';
 import React from 'react';
-import CategoryItem from './components/CategoryItem';
+import BrandItem from './components/BrandItem';
 
-const Category = () => {
-  const { data, isFetching } = useCategoriesQuery({});
+const Brand = () => {
+  const { data, isFetching } = useBrands({});
   return (
     <section className="mt-10">
-      <H2 className="mb-8 text-center text-primary-500">Featured categories</H2>
+      <H2 className="mb-8 text-center text-primary-500">List Brand</H2>
 
       <Show when={!isFetching && data?.items.length === 0}>
-        <div>Category</div>
+        <div>Brand</div>
       </Show>
       <Show when={!isFetching && data && data?.items?.length > 0}>
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-5">
           {data?.items?.map((item) => (
-            <CategoryItem key={item._id} {...item} />
+            <BrandItem key={item._id} {...item} />
           ))}
         </div>
       </Show>
@@ -25,4 +25,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default Brand;

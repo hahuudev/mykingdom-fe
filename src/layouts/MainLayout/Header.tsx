@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Cart from './Cart';
+import SearchComponent from './SearchComponent';
 import UserInfo from './UserInfo';
 
 const Header = () => {
@@ -35,10 +36,14 @@ const Header = () => {
         !isMobile && ' h-header '
       )}
     >
-      <HStack className="mx-auto max-w-[1440px]" pos="apart">
+      <HStack className="mx-auto max-w-[1440px]" pos="apart" spacing={isMobile ? 20 : 48}>
         <Link href={ROUTER.HOME}>
           <Image src="/images/logo.png" alt="logo" width={200} height={60} />
         </Link>
+
+        <HStack className="flex-1">
+          <SearchComponent />
+        </HStack>
 
         <HStack pos="right" spacing={isMobile ? 8 : 48} className="">
           <Cart />

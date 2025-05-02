@@ -43,10 +43,9 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'battle-of-ai-agents.s3.ap-southeast-1.amazonaws.com' },
-      { protocol: 'https', hostname: 'battle-of-ai-agents.s3.amazonaws.com' },
       { protocol: 'https', hostname: 'static.wikia.nocookie.net' },
       { protocol: 'https', hostname: 'mykingdom.com.vn' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
   },
   webpack: process.env.NODE_ENV === 'development' ? undefined : webpack,
