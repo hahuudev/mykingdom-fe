@@ -2,6 +2,7 @@ import type { Address } from 'viem';
 
 export const env = {
   isProduction: process.env.NODE_ENV === 'production',
+  GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '',
   APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? 'https://staging.og-battle-ai.var-meta.com',
   API_URL: process.env.NEXT_PUBLIC_API_URL ?? 'https://api.staging.flofin.myrcvr.com',
   APP_SOCKET_URL: process.env.NEXT_PUBLIC_APP_SOCKET_URL ?? '',

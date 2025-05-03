@@ -4,11 +4,13 @@ import { loginRequest } from '@/api/auth/requests';
 import { TextField } from '@/components/form';
 import { Button } from '@/components/ui/button';
 import { FormWrapper } from '@/components/ui/form';
+import { Separator } from '@/components/ui/separator';
 import { HStack, VStack } from '@/components/utilities';
 import { onMutateError } from '@/libs/common';
 import { ROUTER } from '@/libs/router';
 import { useUserStore } from '@/stores/UserStore';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useGoogleLogin } from '@react-oauth/google';
 import { useMutation } from '@tanstack/react-query';
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next-nprogress-bar';
@@ -28,6 +30,10 @@ const LoginPage = () => {
       email: '',
       password: '',
     },
+  });
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => console.log(codeResponse),
+    flow: 'auth-code',
   });
 
   const { mutate: loginCredential, isLoading } = useMutation(loginRequest);
@@ -75,11 +81,19 @@ const LoginPage = () => {
           </VStack>
 
           <HStack pos="center">
-            <Button type="submit" className="mt-8 mb-2 px-10" loading={isLoading}>
+            <Button type="submit" className="mt-8 mb-2 w-full rounded-full px-10" loading={isLoading}>
               Sign in
             </Button>
           </HStack>
         </FormWrapper>
+        <HStack className="my-2" spacing={12}>
+          <Separator className="flex-1" />
+          <span>or</span>
+          <Separator className="flex-1" />
+        </HStack>
+        <Button onClick={() => login()} variant="outline" className="mb-2 w-full rounded-full">
+          Continue with google
+        </Button>
       </VStack>
     </VStack>
   );
