@@ -1,0 +1,27 @@
+import client from '../axios';
+import type { IProduct, IProductQuery, IProductResponse } from './types';
+
+export const getProducts = async (params: Partial<IProductQuery>): Promise<IProductResponse> => {
+  const { data } = await client({
+    url: '/api/products',
+    method: 'GET',
+    params,
+  });
+  return data?.data;
+};
+
+export const getProductByIdOrSlug = async (id: string): Promise<IProduct> => {
+  const { data } = await client({
+    url: `/api/products/${id}`,
+    method: 'GET',
+  });
+  return data?.data;
+};
+
+export const getProductBySlug = async (slug: string): Promise<IProduct> => {
+  const { data } = await client({
+    url: `/api/products/slug/${slug}`,
+    method: 'GET',
+  });
+  return data?.data;
+};

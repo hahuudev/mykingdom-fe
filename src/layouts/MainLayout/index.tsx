@@ -12,7 +12,7 @@ const MainLayout: FCC<Props> = ({ children }) => {
     <div className="overflow-clip">
       <TopBar />
       <Header />
-      <main className="mx-auto max-w-[1440px]">{children}</main>
+      <main className="">{children}</main>
       {/* <Footer /> */}
     </div>
   );

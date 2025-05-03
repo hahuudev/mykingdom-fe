@@ -33,6 +33,8 @@ const vStackVariants = cva('flex flex-col', {
       20: 'gap-5',
       24: 'gap-6',
       32: 'gap-8',
+      36: 'gap-9',
+      40: 'gap-10',
       48: 'gap-12',
     },
   },
