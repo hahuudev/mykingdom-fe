@@ -10,7 +10,7 @@ export interface InputMaskProps extends InputProps {
   decimalPlaces?: number;
 }
 
-const InputMask = ({ className, options = undefined, decimalPlaces, min, max, onChange, ...props }: InputMaskProps) => {
+const InputMask = ({ className, options = undefined, decimalPlaces, min, max, onChange, onBlur, ...props }: InputMaskProps) => {
   const inputRef = useMask(
     options || {
       mask: '##################',

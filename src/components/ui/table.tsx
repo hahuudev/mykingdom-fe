@@ -87,13 +87,13 @@ export const TableSkeleton = ({ loading = false, row = 5, col = 4 }: TableSkelet
 
 export type TablePaginationProps = {
   onPageChange: (page: number) => void;
-  pagination: Partial<IMetaResponse>;
+  pagination?: IMetaResponse;
   onPageSizeChange?: (pageSize: number) => void;
   loading?: boolean;
 };
 export const TablePagination = ({ onPageSizeChange, onPageChange, pagination }: TablePaginationProps) => {
   return (
-    <HStack pos="apart" className="text-white">
+    <HStack pos="apart" className="w-full text-white">
       <HStack className="hidden lg:flex">
         <Select value={String(pagination?.limit)} onValueChange={(value) => onPageSizeChange?.(Number(value))}>
           <SelectTrigger

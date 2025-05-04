@@ -126,7 +126,7 @@
 
   html,
   body {
-    @apply scroll-smooth font-medium text-[#000];
+    @apply scroll-smooth font-normal text-[#000];
   }
 }
 

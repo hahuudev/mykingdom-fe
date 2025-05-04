@@ -49,3 +49,8 @@ export interface IProductResponse {
   items: IProduct[];
   meta: IMetaResponse;
 }
+
+export interface IProductQuery extends ITableQuery {
+  category?: string;
+  brand?: string;
+}
