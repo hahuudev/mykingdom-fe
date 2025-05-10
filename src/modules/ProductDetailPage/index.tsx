@@ -4,8 +4,15 @@ import Container from '@/components/wrapper/Container';
 import React from 'react';
 import ProductInfo from './components/ProductInfo';
 
-const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
-  const data = await getProductByIdOrSlug(params.slug);
+type Props = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+const ProductDetailPage = async ({ params }: Props) => {
+  const slug = (await params).slug;
+  const data = await getProductByIdOrSlug(slug);
 
   return (
     <div>
