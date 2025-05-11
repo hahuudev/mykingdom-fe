@@ -30,7 +30,9 @@ const QuantityInput = ({ value, onChange, min = 1, max }: Props) => {
     <HStack noWrap className="overflow-hidden rounded-sm border border-primary-500 bg-primary-200">
       <button
         onClick={() => handleChange(valueInput > min ? valueInput - 1 : min)}
-        className={cn('px-4 text-2xl hover:text-white disabled:cursor-not-allowed disabled:text-grey-600')}
+        className={cn('px-4 text-2xl hover:text-white disabled:cursor-not-allowed disabled:text-grey-600', {
+          'cursor-not-allowed hover:text-grey-600': valueInput <= Number(min),
+        })}
         disabled={value === 1}
       >
         -
@@ -41,7 +43,12 @@ const QuantityInput = ({ value, onChange, min = 1, max }: Props) => {
         value={valueInput}
         className="w-16 border-none bg-transparent text-center focus-visible:bg-white focus-visible:shadow-none"
       />
-      <button onClick={() => handleChange(valueInput + 1)} className="px-4 text-xl hover:text-white">
+      <button
+        onClick={() => handleChange(valueInput + 1)}
+        className={cn('px-4 text-xl hover:text-white', {
+          'cursor-not-allowed hover:text-grey-600': valueInput >= Number(max),
+        })}
+      >
         +
       </button>
     </HStack>

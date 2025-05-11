@@ -4,4 +4,6 @@ export const ROUTER = {
   CATEGORIES: '/categories',
   COLLECTIONS: '/collections',
   PRODUCTS: '/products',
+  CART: '/cart',
+  SIGN_UP: '/sign-up',
 } as const;

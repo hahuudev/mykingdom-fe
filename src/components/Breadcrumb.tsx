@@ -1,3 +1,4 @@
+import { cn } from '@/libs/common';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -13,10 +14,10 @@ type Props = {
   className?: string;
 };
 
-const Breadcrumb = ({ breadcrumbs }: Props) => {
+const Breadcrumb = ({ breadcrumbs, className }: Props) => {
   return (
     <div>
-      <section className="bg-[#F2F2F2] py-2">
+      <section className={cn('bg-[#F2F2F2] py-2', className)}>
         <Container className="flex items-center space-x-2 text-sm">
           {breadcrumbs.map((breadcrumb, index) => (
             <React.Fragment key={index}>

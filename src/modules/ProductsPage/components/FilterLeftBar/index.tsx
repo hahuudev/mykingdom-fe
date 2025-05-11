@@ -24,7 +24,7 @@ const FilterLeftBar = () => {
         <VStack spacing={20}>
           {data?.items?.map((item) => (
             <Link
-              href={`/${ROUTER.COLLECTIONS}/${item.slug}`}
+              href={`${ROUTER.COLLECTIONS}/${item.slug}`}
               key={item._id}
               className="flex items-center justify-between rounded px-2 py-1 text-sm hover:bg-primary-200"
             >

@@ -34,6 +34,8 @@ export interface IProduct {
   totalSoldCount: number;
   averageRating: number;
   reviewCount: number;
+  originalPrice: number;
+  currentPrice: number;
   tags: string[];
   isActive: boolean;
   isFeatured: boolean;
@@ -43,6 +45,7 @@ export interface IProduct {
   createdAt: string;
   updatedAt: string;
   slug: string;
+  totalQuantity: number;
 }
 
 export interface IProductResponse {
