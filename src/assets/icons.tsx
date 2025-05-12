@@ -41,8 +41,10 @@ import wallet from './svg/wallet.svg';
 import xCircle from './svg/x-circle.svg';
 import X from './svg/x.svg';
 import xlsx from './svg/xlsx.svg';
+import lightning from './svg/lightning.svg';
 
 const IconList = {
+  lightning,
   cart,
   home,
   help,

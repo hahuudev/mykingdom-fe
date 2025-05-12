@@ -1,7 +1,7 @@
 'use client';
 
 import type { ICategory } from '@/api/category/types';
-import H4 from '@/components/text/H4';
+import H5 from '@/components/text/H5';
 import { ROUTER } from '@/libs/router';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
@@ -28,7 +28,7 @@ const CategoryItem = ({ loading, name, slug, image }: Props) => {
         </div>
       </div>
 
-      <H4 className="mt-2 text-center font-poppins text-[#041675] text-sm">{name}</H4>
+      <H5 className="mt-2 text-center font-poppins text-[#041675] text-sm">{name}</H5>
     </Link>
   );
 };

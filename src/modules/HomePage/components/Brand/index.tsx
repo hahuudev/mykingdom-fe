@@ -8,14 +8,14 @@ import BrandItem from './components/BrandItem';
 const Brand = () => {
   const { data, isFetching } = useBrands({});
   return (
-    <section className="mt-10">
+    <section className="mt-10 bg-[#FEF373]">
       <H2 className="mb-8 text-center text-primary-500">List Brand</H2>
 
       <Show when={!isFetching && data?.items.length === 0}>
         <div>Brand</div>
       </Show>
       <Show when={!isFetching && data && data?.items?.length > 0}>
-        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-6">
           {data?.items?.map((item) => (
             <BrandItem key={item._id} {...item} />
           ))}

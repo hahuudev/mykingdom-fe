@@ -8,11 +8,13 @@ import Category from './components/Category';
 
 const HomePage = () => {
   return (
-    <Container>
+    <Container className="mt-10">
       <VStack spacing={48}>
         <Banner />
 
         <Category />
+
+        {/* <ProductBestSeller /> */}
 
         <Brand />
       </VStack>

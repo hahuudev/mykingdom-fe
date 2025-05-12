@@ -25,3 +25,24 @@ export const getProductBySlug = async (slug: string): Promise<IProduct> => {
   });
   return data?.data;
 };
+
+export const getProductsBestSeller = async (params: Partial<IProductQuery>): Promise<IProductResponse> => {
+  const { data } = await client({
+    url: '/api/products/best-sellers',
+    method: 'GET',
+    params,
+  });
+  return data?.data;
+};
+
+export const getProductsRelated = async ({
+  params,
+  productId,
+}: { params: Partial<IProductQuery>; productId: string }): Promise<IProductResponse> => {
+  const { data } = await client({
+    url: `/api/products/${productId}/related`,
+    method: 'GET',
+    params,
+  });
+  return data?.data;
+};

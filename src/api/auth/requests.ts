@@ -1,6 +1,7 @@
 import type { CreateAccountSchema, EditAccountSchema } from '@/layouts/MainLayout/libs/validators';
 import { env } from '@/libs/const';
 import type { AuthSchema } from '@/modules/LoginPage/libs/validators';
+import type { SignUpSchema } from '@/modules/SignUpPage/libs/validators';
 import axios from 'axios';
 import client from '../axios';
 import type { ILoginResponse, IUploadAvatarResponse, IUser } from './types';
@@ -8,6 +9,16 @@ import type { ILoginResponse, IUploadAvatarResponse, IUser } from './types';
 export const loginRequest = async (formData: AuthSchema): Promise<ILoginResponse> => {
   const { data } = await client({
     url: '/api/auth/sign-in',
+    method: 'POST',
+    data: formData,
+  });
+
+  return data?.data;
+};
+
+export const signUpRequest = async (formData: SignUpSchema): Promise<ILoginResponse> => {
+  const { data } = await client({
+    url: '/api/auth/sign-up',
     method: 'POST',
     data: formData,
   });

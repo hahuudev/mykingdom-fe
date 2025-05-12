@@ -15,6 +15,7 @@ import { useMutation } from '@tanstack/react-query';
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next-nprogress-bar';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -63,10 +64,10 @@ const LoginPage = () => {
         <Image width={600} height={348} src="/images/logo.png" alt="battle logo" className="h-auto w-[14rem]" />
       </HStack>
       <VStack className="w-full max-w-[450px] rounded-lg border border-grey-100 px-6 py-6 shadow-card-2 md:px-8" spacing={16}>
-        <h1 className="mb-5 text-center font-semibold text-2xl md:text-3xl">User Login</h1>
+        <h1 className="mb-4 text-center font-semibold text-2xl md:text-3xl">User Login</h1>
 
         <FormWrapper form={form} onSubmit={handleSubmit}>
-          <VStack spacing={32}>
+          <VStack spacing={24}>
             <TextField inputSize="md" required fullWidth control={form.control} name="email" label="Email" placeholder="Enter your email" />
             <TextField
               required
@@ -86,7 +87,7 @@ const LoginPage = () => {
             </Button>
           </HStack>
         </FormWrapper>
-        <HStack className="my-2" spacing={12}>
+        <HStack className="my-2" spacing={8}>
           <Separator className="flex-1" />
           <span>or</span>
           <Separator className="flex-1" />
@@ -94,6 +95,13 @@ const LoginPage = () => {
         <Button onClick={() => login()} variant="outline" className="mb-2 w-full rounded-full">
           Continue with google
         </Button>
+
+        <div className="text-right text-sm">
+          Don't have an account?{' '}
+          <Link href={ROUTER.SIGN_UP} className="font-semibold text-primary-500 hover:text-primary-600">
+            Sign up
+          </Link>
+        </div>
       </VStack>
     </VStack>
   );

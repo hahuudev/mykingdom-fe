@@ -1,33 +1,19 @@
 'use client';
+import { Button } from '@/components/ui/button';
 import { HStack } from '@/components/utilities';
 import { useMobile } from '@/hooks/breakpoint';
+import { useUserLogin } from '@/hooks/useUserLogin';
 import { cn } from '@/libs/common';
 import { ROUTER } from '@/libs/router';
-import { useAppStore } from '@/stores/AppStore';
-import { useUserStore } from '@/stores/UserStore';
-import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
 import Cart from './Cart';
 import SearchComponent from './SearchComponent';
 import UserInfo from './UserInfo';
 
 const Header = () => {
   const isMobile = useMobile();
-  const queryClient = useQueryClient();
-
-  const openSideBar = useAppStore.use.openSideBar();
-  const router = useRouter();
-  const { user, setUser } = useUserStore();
-
-  const handleLogout = () => {
-    setUser({} as any);
-    queryClient.clear();
-    router.replace(ROUTER.SIGN_IN);
-    toast.success('Logout successfully!');
-  };
+  const { user } = useUserLogin();
 
   return (
     <header
@@ -47,7 +33,14 @@ const Header = () => {
 
         <HStack pos="right" spacing={isMobile ? 8 : 48} className="">
           <Cart />
-          <UserInfo />
+
+          {!user ? (
+            <Link href={ROUTER.SIGN_IN}>
+              <Button className="rounded-full">Sign In</Button>
+            </Link>
+          ) : (
+            <UserInfo />
+          )}
         </HStack>
       </HStack>
     </header>

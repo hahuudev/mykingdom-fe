@@ -10,8 +10,8 @@ const SearchComponent = () => {
     <>
       <Popover>
         <PopoverTrigger className="w-full lg:mr-10 xl:mr-24" asChild>
-          <div className="w-full lg:mr-10 xl:mr-24">
-            <input ref={inputRef} className="h-11 w-full rounded-full bg-white px-4 text-black" placeholder="Search..." />
+          <div className="">
+            <input ref={inputRef} className="h-11 w-full max-w-[500px] rounded-full bg-white px-4 text-black" placeholder="Search..." />
           </div>
         </PopoverTrigger>
         <PopoverContent

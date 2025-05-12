@@ -1,3 +1,4 @@
+import type { ICategory } from '../category/types';
 import type { IMetaResponse, ITableQuery } from './../../types/index';
 
 export interface IProductQuery extends ITableQuery {}
@@ -27,8 +28,8 @@ export interface IProduct {
   type: string;
   images: string[];
   categories: string[];
-  primaryCategoryId: string | null;
-  brandId: IBrandInfo;
+  primaryCategory?: ICategory;
+  brand: IBrandInfo;
   variants: IProductVariant[];
   viewCount: number;
   totalSoldCount: number;

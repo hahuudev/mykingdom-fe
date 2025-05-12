@@ -3,8 +3,10 @@
 import { useProductsQuery } from '@/api/product/queries';
 import type { IProductQuery } from '@/api/product/types';
 import Breadcrumb from '@/components/Breadcrumb';
+import NoDataAvailable from '@/components/NoDataAvailable';
 import { Separator } from '@/components/ui/separator';
 import { TablePagination } from '@/components/ui/table';
+import { Show } from '@/components/utilities';
 import Container from '@/components/wrapper/Container';
 import { onMutateError } from '@/libs/common';
 import { useParams } from 'next/navigation';
@@ -31,15 +33,29 @@ const ProductPage = () => {
           <FilterLeftBar />
 
           <div className="ml-4 flex-1 lg:ml-8">
-            <FilterTopBar />
+            <FilterTopBar total={data?.meta.total || 0} />
 
             <Separator className="my-6" />
 
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-              {data?.items?.map((item) => (
-                <ProductItem key={item._id} {...item} />
-              ))}
-            </div>
+            <Show when={isFetching}>
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+                {Array.from({ length: 6 }, (_, index) => (
+                  <ProductItem key={index} loading />
+                ))}
+              </div>
+            </Show>
+
+            <Show when={!isFetching && data && data?.items?.length > 0}>
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+                {data?.items?.map((item) => (
+                  <ProductItem key={item._id} {...item} />
+                ))}
+              </div>
+            </Show>
+
+            <Show when={!isFetching && data && data?.items?.length === 0}>
+              <NoDataAvailable />
+            </Show>
 
             <div className="mt-10">
               <TablePagination
