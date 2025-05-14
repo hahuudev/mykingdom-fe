@@ -5,6 +5,8 @@ import React from 'react';
 import Banner from './components/Banner';
 import Brand from './components/Brand';
 import Category from './components/Category';
+import FeaturedProducts from './components/FeaturedProducts';
+import NewArrivals from './components/NewArrivals';
 import ProductBestSeller from './components/ProductBestSeller';
 
 const HomePage = () => {
@@ -12,15 +14,19 @@ const HomePage = () => {
     <Container className="mt-10">
       <VStack spacing={48}>
         <Banner />
-dd
+
         <Category />
 
+        <NewArrivals />
+
         <ProductBestSeller />
+
+        <FeaturedProducts />
 
         <Brand />
       </VStack>
 
-      <div className="h-[300px]"></div>
+      <div className="h-[100px]"></div>
     </Container>
   );
 };
