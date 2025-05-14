@@ -5,6 +5,7 @@ import React from 'react';
 import Banner from './components/Banner';
 import Brand from './components/Brand';
 import Category from './components/Category';
+import ProductBestSeller from './components/ProductBestSeller';
 
 const HomePage = () => {
   return (
@@ -14,7 +15,7 @@ const HomePage = () => {
 
         <Category />
 
-        {/* <ProductBestSeller /> */}
+        <ProductBestSeller />
 
         <Brand />
       </VStack>

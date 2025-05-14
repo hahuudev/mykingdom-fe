@@ -13,7 +13,7 @@ const ProductBestSeller = () => {
     <section className="mt-10">
       <H2 className="mb-8 text-center text-primary-500">Product Best Sellers</H2>
 
-      <Show when={!isFetching && data?.items.length === 0}>
+      <Show when={!isFetching && data?.items?.length === 0}>
         <div>Category</div>
       </Show>
       <Show when={!isFetching && data && data?.items?.length > 0}>
