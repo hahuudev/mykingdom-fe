@@ -12,7 +12,7 @@ const HomePage = () => {
     <Container className="mt-10">
       <VStack spacing={48}>
         <Banner />
-
+dd
         <Category />
 
         <ProductBestSeller />
